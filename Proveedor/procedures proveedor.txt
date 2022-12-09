@@ -1,0 +1,91 @@
+*--------------Crear Tabla ------------------*
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Proveedor](
+	[idProveedor] [int] NOT NULL,
+	[Nombre] [varchar](50) NULL,
+	[Telefono] [varchar](50) NULL,
+	[Correo] [varchar](50) NULL,
+	[Direccion] [varchar](50) NULL,
+	[Status] [int] NULL
+) ON [PRIMARY]
+GO
+
+
+
+
+*------------------------------Agregar proveedor-------------------*
+USE [veterinaria]
+GO
+/****** Object:  StoredProcedure [dbo].[spAgregarProveedor]    Script Date: 06/12/2022 05:21:46 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spAgregarProveedor]
+	@nombre varchar(80),
+	@telefono varchar(80),
+	@correo varchar(80),
+	@direccion varchar(80)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @idProveedor INT
+
+	SET @idProveedor =  (SELECT ISNULL(MAX(idProveedor),0) + 1 AS idProveedor FROM Proveedor)
+	INSERT INTO Proveedor (idProveedor, Nombre, Telefono, Correo, Direccion,Status)
+	VALUES (@idProveedor, @nombre, @telefono, @correo, @direccion,1)
+END
+
+
+*---------------------------eliminar proveedor-----------------------*
+USE [veterinaria]
+GO
+/****** Object:  StoredProcedure [dbo].[spEliminarProveedor]    Script Date: 06/12/2022 05:23:40 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spEliminarProveedor]
+	@idProveedor int
+AS
+BEGIN
+	UPDATE Proveedor SET Status = 2  WHERE idProveedor = @idProveedor;
+END
+
+
+*-----------------------Modificar proveedor-----------------------*
+USE [veterinaria]
+GO
+/****** Object:  StoredProcedure [dbo].[spModificarProveedor]    Script Date: 06/12/2022 05:25:34 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spModificarProveedor]
+	@idProveedor int,
+	@nombre varchar(80),
+	@telefono varchar(80),
+	@correo varchar(80),
+	@direccion varchar(80)
+AS
+BEGIN
+	UPDATE Proveedor SET Nombre = @nombre, Direccion = @direccion, Correo= @Correo, Telefono=@telefono WHERE idProveedor = @idProveedor;
+END
+
+
+*-------------------------------Lista Provedor----------------------------------*
+USE [veterinaria]
+GO
+/****** Object:  StoredProcedure [dbo].[spProveedorDatos]    Script Date: 06/12/2022 05:25:59 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spProveedorDatos]
+AS
+BEGIN
+	SELECT * FROM Proveedor WHERE Status = 1;
+END
